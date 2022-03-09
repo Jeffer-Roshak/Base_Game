@@ -29,21 +29,42 @@ def Map_Display(map):
 def Input_Handler(char):
     '''Function for handling player input'''
     if (char=='w'):
-        print('you pressed w')
+        Movement_Controller(map_Medbay,'w')
     elif(char=='a'):
-        print('you pressed a')
+        Movement_Controller(map_Medbay,'a')
     elif(char=='s'):
-        print('you pressed s')
+        Movement_Controller(map_Medbay,'s')
     elif(char=='d'):
-        print('you pressed d')
+        Movement_Controller(map_Medbay,'d')
+    elif(char=='e'):
+        Use_Handler(map_Medbay, 'e')
     else:
         print('unknown character')
 
+def Movement_Controller(map, char):
+    '''Function for controlling the player movement'''
+    map_dimensions = map.shape
+    if (char=='w'):
+        if(player_Pos['row']-1>=0): #W: for up
+            player_Pos['row'] = player_Pos['row'] - 1;
+    elif(char=='a'):
+        if(player_Pos['column']-1>=0): #A: for left
+            player_Pos['column'] = player_Pos['column'] - 1;
+    elif(char=='s'):
+        if(player_Pos['row']+1<map_dimensions[0]): #S: for down
+            player_Pos['row'] = player_Pos['row'] + 1;
+    elif(char=='d'):
+        if(player_Pos['column']+1<map_dimensions[1]): #D: for right
+            player_Pos['column'] = player_Pos['column'] + 1;
+
+def Use_Handler(map, char):
+    '''Function for '''
+
 #Main Function/Testing functions
 print('Game Start')
-Map_Display(map_Medbay)
+
 while True:
     input_char = msvcrt.getwch() #Only for windows
     Input_Handler(input_char)
-
+    Map_Display(map_Medbay)
 
