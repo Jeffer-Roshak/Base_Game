@@ -4,9 +4,9 @@ import numpy as np
 import msvcrt #Only for windows
 
 #Variables
-map_Medbay = np.array([[0,0,0,0,0],
-                       [0,0,0,0,0],
-                       [0,0,0,0,0]])
+map_Medbay = np.array([[6,4,0,3,4],
+                       [1,0,3,0,5],
+                       [2,4,0,4,0]])
 player_Pos = {'row':0,'column':0}
 
 #Functions and Classes
@@ -37,7 +37,7 @@ def Input_Handler(char):
     elif(char=='d'):
         Movement_Controller(map_Medbay,'d')
     elif(char=='e'):
-        Use_Handler(map_Medbay, 'e')
+        Use_Handler(map_Medbay)
     else:
         print('unknown character')
 
@@ -57,8 +57,34 @@ def Movement_Controller(map, char):
         if(player_Pos['column']+1<map_dimensions[1]): #D: for right
             player_Pos['column'] = player_Pos['column'] + 1;
 
-def Use_Handler(map, char):
-    '''Function for '''
+def Use_Handler(map):
+    '''Function for dealing with use of objects'''
+    tile = map[player_Pos['row']][player_Pos['column']]
+    if(tile==0):
+        print("There is nothing here.")
+    elif(tile==1):
+        print("You used the door")
+    elif(tile==2):
+        print("You used a terminal")
+    elif(tile==3):
+        print("You found something on the floor")
+    elif(tile==4):
+        print("You found a locker")
+    elif(tile==5):
+        print("You found a safe")
+    elif(tile==6):
+        print("You found something interesting")
+    elif(tile==7):
+        print("You found a Computer")
+    elif(tile==8):
+        print("You found the N.E.S.S.I.E Core")
+    elif(tile==9):
+        print("You found Doris")
+    elif(tile==10):
+        print("You found Ellen")
+    elif(tile==11):
+        print("You found the escape pod")
+
 
 #Main Function/Testing functions
 print('Game Start')
