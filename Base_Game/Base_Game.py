@@ -1,4 +1,4 @@
-'''
+credits='''
                                                                                                              
 `7MM"""Yb.      db      `7MM"""Mq.  `7MMF' `YMM'     `7MMF'     A     `7MF' db   MMP""MM""YMM `7MM"""YMM  `7MM"""Mq.  
   MM    `Yb.   ;MM:       MM   `MM.   MM   .M'         `MA     ,MA     ,V  ;MM:  P'   MM   `7   MM    `7    MM   `MM. 
@@ -68,11 +68,94 @@ doors = [{'locked':True, 'f_room':1, 't_room':0, 'f_x':0, 'f_y':0, 't_x':1, 't_y
          {'locked':False, 'f_room':6, 't_room':8, 'f_x':2, 'f_y':4, 't_x':0, 't_y':0} #Prep2-Dock2 (Not to be used)
          ]
 
+'''
+Storage Objects
+name: Defines what the object is
+itemID: ItemID of the Item it holds
+room: Which room the 
+row: 
+column: 
+'''
+storage = [
+  {'name':"Equipment Locker",'itemID':0,'room':1,'row':2,'column':0},
+  {'name':"Equipment Locker",'itemID':1,'room':1,'row':2,'column':1},
+  {'name':"Coffee Maker",'itemID':7,'room':1,'row':2,'column':3},
+  {'name':"Pantry",'itemID':255,'room':1,'row':2,'column':4},
+
+  {'name':"Tony's Table",'itemID':23,'room':2,'row':0,'column':1},
+  {'name':"Medical Locker",'itemID':3,'room':2,'row':0,'column':4},
+  {'name':"Bed",'itemID':22,'room':2,'row':2,'column':1},
+  {'name':"Bed",'itemID':21,'room':2,'row':2,'column':3},
+
+  {'name':"Blaire and Ellen's Bunk Bed",'itemID':10,'room':3,'row':2,'column':0},
+  {'name':"Doris and Tony's Bunk Bed",'itemID':5,'room':3,'row':3,'column':0},
+  {'name':"John and Drake's Bunk Bed",'itemID':27,'room':3,'row':3,'column':2},
+  {'name':"Shelf",'itemID':30,'room':3,'row':4,'column':2},
+
+  {'name':"Water Circulator",'itemID':15,'room':5,'row':2,'column':2},
+
+  {'name':"Equipment Locker",'itemID':0,'room':6,'row':0,'column':0},
+  {'name':"Equipment Locker",'itemID':1,'room':6,'row':0,'column':1},
+
+  {'name':"Freezer",'itemID':13,'room':7,'row':0,'column':0},
+  {'name':"Supply Closet",'itemID':2,'room':7,'row':2,'column':0},
+  {'name':"a Table",'itemID':255,'room':7,'row':1,'column':1},
+  {'name':"Table",'itemID':255,'room':7,'row':1,'column':2}
+]
+
+safes = [
+    {'name':"Safe",'code':'1234','locked':True,'itemID':6,'room':1,'row':2,'column':3}
+    ]
+
+item_list = [
+{'ID':0,'name':'Wetsuit','taken':False},
+{'ID':1,'name':'Headset','taken':False},
+{'ID':2,'name':'Alcohol','taken':False},
+{'ID':3,'name':'Bandages','taken':False},
+{'ID':4,'name':'Candy Bar','taken':False},
+{'ID':5,'name':'Cotton Shirt','taken':False},
+{'ID':6,'name':'Oxycodone','taken':False},
+{'ID':7,'name':'Heating Element','taken':False},
+{'ID':8,'name':'','taken':False},
+{'ID':9,'name':'','taken':False},
+{'ID':10,'name':'Blaire\'s PDA','taken':False},
+{'ID':11,'name':'Ellen\'s PDA','taken':False},
+{'ID':12,'name':'Doris\' PDA','taken':False},
+{'ID':13,'name':'Tony\'s PDA','taken':False},
+{'ID':14,'name':'John\'s PDA','taken':False},
+{'ID':15,'name':'Drake\'s PDA','taken':False},
+{'ID':16,'name':'','taken':False},
+{'ID':17,'name':'','taken':False},
+{'ID':18,'name':'','taken':False},
+{'ID':19,'name':'','taken':False},
+{'ID':20,'name':'Blaire\'s file','taken':False},
+{'ID':21,'name':'Doris\' file','taken':False},
+{'ID':22,'name':'Ellen\'s file','taken':False},
+{'ID':23,'name':'Birthday card','taken':False},
+{'ID':24,'name':'Base Eng. Guide','taken':False},
+{'ID':25,'name':'N.E.S.S.I.E Handbook','taken':False},
+{'ID':26,'name':'Deepwater Brochure','taken':False},
+{'ID':27,'name':'E. Systems Guide','taken':False},
+{'ID':28,'name':'','taken':False},
+{'ID':29,'name':'','taken':False},
+{'ID':30,'name':'Alien DVD','taken':False},
+{'ID':31,'name':'Blair Witch Project','taken':False},
+{'ID':32,'name':'Aliens','taken':False},
+{'ID':33,'name':'Iron Man','taken':False},
+{'ID':34,'name':'JW: Parabellum','taken':False},
+{'ID':35,'name':'','taken':False},
+{'ID':36,'name':'','taken':False},
+{'ID':37,'name':'','taken':False},
+{'ID':38,'name':'','taken':False},
+{'ID':39,'name':'','taken':False}
+]
+
 #Game Control Variables
 player_Pos = {'row':0,'column':0}
 currentRoom = 0
 map_Current = map_Medbay
 stay = False #For staying in the Room
+continueGame = True
 doorMasterCode = '5389'
 
 #Functions and Classes
@@ -159,10 +242,13 @@ def Use_Handler(map):
         terminalHandler()
     elif(tile==3):
         print("You found something on the floor")
+        itemFloorHandler()
     elif(tile==4):
         print("You found a locker")
+        storageHandler()
     elif(tile==5):
         print("You found a safe")
+        safeHandler()
     elif(tile==6):
         print("You found something interesting")
     elif(tile==7):
@@ -177,7 +263,8 @@ def Use_Handler(map):
         print("You found Ellen")
         Ellen()
     elif(tile==11):
-        print("You found the escape pod")
+        print("You found an escape pod")
+        Triton()
 
 #Door Functions
 def doorHandler():
@@ -367,6 +454,144 @@ def terminalInterface(doorNo):
                 print("Enter Password:")
     doors[doorNo]['locked']=locked
 
+#Item Floor Functions
+def changeTile(map, tileID, row, column):
+    map[row][column]=tileID
+
+def itemFloorHandler():
+    if(currentRoom==1):
+        itemNo = 4
+    elif(currentRoom==2):
+        if(player_Pos['column']==2):
+            itemNo = 2
+        elif (player_Pos['column']==3):
+            itemNo = 20
+    elif(currentRoom==4):
+      itemNo = 25
+    elif(currentRoom==6):
+      itemNo = 26
+    item_list[itemNo]['taken'] = True
+    print('Item Found: '+item_list[itemNo]['name'])
+    changeTile(map_Current, 0, player_Pos['row'],player_Pos['column'])
+
+#Storage Functions
+def storageHandler():
+    '''storageHandler()
+
+    '''
+    if(currentRoom==1):
+        if(player_Pos['column']==0):
+            getStorageItem(0)
+        elif(player_Pos['column']==1):
+            getStorageItem(1)
+        elif(player_Pos['column']==3):
+            getStorageItem(2)
+        else:
+            getStorageItem(3)
+    elif(currentRoom==2):
+        if(player_Pos['row']==0):
+            if(player_Pos['column']==1):
+                getStorageItem(4)
+            else:
+                getStorageItem(5)
+        elif(player_Pos['row']==2):
+            if(player_Pos['column']==1):
+                getStorageItem(6)
+            else:
+                getStorageItem(7)
+    elif(currentRoom==3):
+        if(player_Pos['row']==2):
+            getStorageItem(8)
+        elif(player_Pos['row']==3):
+            if(player_Pos['column']==0):
+                getStorageItem(9)
+            else:
+                getStorageItem(10)
+        elif(player_Pos['row']==4):
+            getStorageItem(11)
+    elif(currentRoom==5):
+        getStorageItem(12)
+    elif(currentRoom==6):
+        if(player_Pos['column']==0):
+            getStorageItem(13)
+        else:
+            getStorageItem(14)
+    elif(currentRoom==7):
+        if(player_Pos['row']==0):
+            getStorageItem(15)
+        elif(player_Pos['row']==2):
+            getStorageItem(16)
+        else:
+            if(player_Pos['column']==1):
+                getStorageItem(17)
+            else:
+                getStorageItem(18)        
+
+def getStorageItem(storageNo):
+    '''getStorageItem()
+
+    '''
+    global item_list
+    print('You found: '+storage[storageNo]['name'])
+    if(item_list[storage[storageNo]['itemID']]['taken']):
+        #If the item has been taken, then it shouldn't be there in the storage
+        print('There is nothing else here.')
+        return
+    print('There is something else here.')
+    print('Search?')
+    take = msvcrt.getwch() #Only for windows
+    if(take=='y'):
+        item_list[storage[storageNo]['itemID']]['taken'] = True
+        print('Item Found: '+item_list[storage[storageNo]['itemID']]['name'])
+
+#Safe Functions
+def safeHandler():
+    getSafeItem(0)
+
+def getSafeItem(safeNo):
+    '''getStorageItem()
+
+    '''
+    global safes, item_list
+    print('You found '+safes[safeNo]['name'])
+    if(item_list[safes[safeNo]['itemID']]['taken']):
+        #If the item has been taken, then it shouldn't be there in the storage
+        print('There is nothing else here.')
+        return
+    if(not(safes[safeNo]['locked'])):
+        print("The door is already unlocked")
+        return;
+    userCode = ''
+    data_count = 0
+    loop = True
+    locked = True
+    print("Enter Password:")
+    while (loop):
+        key = msvcrt.getwch() #Only for windows
+        if (key == 'q'):
+            #To exit menu
+            return;
+        userCode = userCode+key
+        print(key, end='')
+        data_count=data_count+1
+        if (data_count == 4):
+            if (userCode==safes[safeNo]['code']):
+                print("\nUnlocked")
+                loop = False
+                locked = False
+            else:
+                print("\nIncorrect. Try Again.")
+                userCode = ''
+                data_count = 0
+                print("Enter Password:")
+    safes[safeNo]['locked']=locked
+    print('There is something else here.')
+    print('Search?')
+    take = msvcrt.getwch() #Only for windows
+    if(take=='y'):
+        item_list[safes[safeNo]['itemID']]['taken'] = True
+        print('Item Found: '+item_list[safes[safeNo]['itemID']]['name'])
+
 #NPCs
 def Doris():
     '''Function for the NPC Doris'''
@@ -377,9 +602,21 @@ def Ellen():
 def Nessie():
     '''Function for the NPC N.E.S.S.I.E'''
 
+#Triton
+def Triton():
+    global stay, continueGame
+    print('You Won!')
+    stay = False
+    continueGame = False
+
+#Credits
+def Credits():
+    print('CREDITS')
+    print(credits)
+
 #Main Function/Testing functions
 print('Game Start')
-while True:
+while continueGame:
     if(currentRoom==0):
         map_Current = map_DockingHub1
     elif(currentRoom==1):
@@ -402,3 +639,4 @@ while True:
         input_char = msvcrt.getwch() #Only for windows
         Input_Handler(input_char)
         Map_Display(map_Current)
+Credits()
