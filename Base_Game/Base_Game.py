@@ -276,8 +276,8 @@ def Input_Handler(char):
         Movement_Controller(map_Current,'d')
     elif(char=='e'):
         Use_Handler(map_Current)
-    #elif(char=='i'):
-    #    Inventory()
+    elif(char=='i'):
+        Inventory()
     else:
         print('Unknown character')
 
@@ -769,6 +769,31 @@ def Start_Screen():
         else:
             print('Unknown Character')
 
+def Inventory():
+    '''
+    Inventory()
+    '''
+    print('Inventory')
+    print('1. Crafting/Trading')
+    Display_Inventory(0,8)
+    print('2. Passwords')
+    Display_Inventory(10,6)
+    print('3. Information')
+    Display_Inventory(20,8)
+    print('4. Collectibles')
+    Display_Inventory(30,5)
+    print('\nPress any key to continue...')
+    hold = msvcrt.getwch() #Only for windows
+
+def Display_Inventory(group,size):
+    print('|', end='')
+    for i in range(group,group+size):
+        if(item_list[i]['taken']==True):
+            print(item_list[i]['name'],'|', end='')
+        else:
+            print('Empty |', end='')
+    print('')
+
 def Credits():
     clearConsole()
     print('CREDITS')
@@ -792,6 +817,7 @@ def Controls():
     |                      S: Move down                      |
     |                      D: Move right                     |
     |                      E: Use\Interact                   |                 
+    |                      I: Inventory                      |                 
     |++++++++++++++++++++++++++++++++++++++++++++++++++++++++|
     ''')
     print('\nPress any key to continue...')
