@@ -9,6 +9,7 @@ title='''
 .JMMmmmdP'.AMA.   .AMMA..JMML. .JMM..JMML.   MMb.          VF      VF .AMA.   .AMMA..JMML.    .JMMmmmmMMM .JMML. .JMM.
 
 '''
+
 credits='''
 PROJECT:// Dark Water
 Code by: _SPECTRE
@@ -173,6 +174,49 @@ item_list = [
 {'ID':39,'name':'','taken':False}
 ]
 
+#Crafting/Trading Descriptions
+#These items will display the
+ct_item_text=[
+    {'quote':'\"Stay toasty\"','desc':'A CorTex 4mm Neoprene Drysuit. For staying dry and warm in cold waters.'},
+    {'quote':'\"Hearing Aids\"','desc':'A headset for emergency comms.'},
+    {'quote':'\"Flammable\"','desc':'Yep. Flammable.'},
+    {'quote':'\"HemCorp ChitoGauze\"','desc':'Emergency bandages. Effective against bleeding.'},
+    {'quote':'\"Now with chocolate\"','desc':'A delicious candy bar high in energy. Doris’ favorite.'},
+    {'quote':'\"05 06 1989\"','desc':'All flammable items should be stored in lockers when not in use. [Atlantis Explosion Incident Report]'},
+    {'quote':'\"Pain can\'t stop you!\"','desc':'A bottle of fast acting painkillers. '},
+    {'quote':'\"Sparking\"','desc':'It\'s broken. Can cause sparks. '}
+]
+
+p_item_text=[
+    {'title':'TO DO','message':'I changed my locker code to 5282'},
+    {'title':'TO DO','message':'I changed my locker code to 5282'},
+    {'title':'TO DO','message':'I changed my locker code to 5282'},
+    {'title':'TO DO','message':'I changed my locker code to 5282'},
+    {'title':'TO DO','message':'I changed my locker code to 5282'},
+    {'title':'TO DO','message':'I changed my locker code to 5282'}
+]
+
+i_item_text=[
+    {'title':'Corvatti Corporation Medical Record','text_body':'\nName:\nAge:\nWeight:\nHeight:'},
+    {'title':'Corvatti Corporation Medical Record','text_body':'\nName:\nAge:\nWeight:\nHeight:'},
+    {'title':'Corvatti Corporation Medical Record','text_body':'\nName:\nAge:\nWeight:\nHeight:'},
+    {'title':'It\'s a special day...','text_body':'\"Happy Birthday Handsome\" - Doris XOXO'},
+    {'title':'Docking Bay Door Override','text_body':'In the event of a fire, and assuming that the docking hub hull integrity is not compromised, the docking hub doors will be unlocked automatically to facilitate evacuations.'},
+    {'title':'Neural Engineering and Safety Scrutiny Intelligence Engine','text_body':'The deep sea offers a challenging environment for any operation. Any issue can easily spiral out of control in such extremes. It is for this exact reason that NESSIE was created. A Neural Intelligence Engine, NESSIE is responsible for monitoring the Calypso: its integrity, its operations, and its safety. By performing over 30 roles on its own, NESSIE allows the Calypso to be run by a skeleton crew of just 6. The culmination of 5 years of collaboration between the Corvatti Corporation and the Shannon Institute for AI, NESSIE represents the pinnacle of Evolutionary Neural Networks.'},
+    {'title':'Corvatti Chimera Class DSRV-13A','text_body':'A state of the art Deep Sea Research Vehicle, the Chimera Class 13A is fully equipped for the exploration needs in the extreme environments of the deep sea. It borrows various design inspirations from nature, particularly from the humble Strawberry Squid. It possesses an array of sensors lining its base for optimum awareness. It possesses an arm array of 10 arms, with each arm suited for different tasks. It possesses a differential camera suite, allowing it to see in a spectrum beyond human limits. This, combined with the distinctive red of its Adamantite Hull, has given it the affectionate name \"The Strawberry\".'},
+    {'title':'Emergency Protocol 6','text_body':'In the event of pathological contagion, the Calypso will engage Emergency Protocol 6.'},
+]
+
+cl_item_text=[
+    'Alien',
+    'Blair Witch Project',
+    'Aliens',
+    'Iron Man',
+    'JW: Parabellum',
+]
+
+#Dialogues
+
 strBlair1=[
     '*Alarms Blaring*',
     'You wake up on the floor',
@@ -278,6 +322,8 @@ def Input_Handler(char):
         Use_Handler(map_Current)
     elif(char=='i'):
         Inventory()
+    elif(char==chr(27)):
+        Exit_Menu()
     else:
         print('Unknown character')
 
@@ -728,6 +774,9 @@ def Blair():
         delay_print(dialogue)
         #print(f"{test3 : >120}")
         next = msvcrt.getwch() #Only for windows
+        if(next=='e'):
+            clearConsole()
+            break;
         clearConsole()
 
 #Triton
@@ -773,17 +822,34 @@ def Inventory():
     '''
     Inventory()
     '''
-    print('Inventory')
-    print('1. Crafting/Trading')
-    Display_Inventory(0,8)
-    print('2. Passwords')
-    Display_Inventory(10,6)
-    print('3. Information')
-    Display_Inventory(20,8)
-    print('4. Collectibles')
-    Display_Inventory(30,5)
-    print('\nPress any key to continue...')
-    hold = msvcrt.getwch() #Only for windows
+    inv_loop=True
+    while(inv_loop):
+        print('Inventory')
+        print('1. Crafting/Trading')
+        Display_Inventory(0,8)
+        print('2. Passwords')
+        Display_Inventory(10,6)
+        print('3. Information')
+        Display_Inventory(20,8)
+        print('4. Collectibles')
+        Display_Inventory(30,5)
+        print('E. Exit')
+        choice = msvcrt.getwch() #Only for windows
+        if(choice=='1'):
+            Crafting()
+        elif(choice=='2'):
+            Passwords()
+        elif(choice=='3'):
+            Information()
+        elif(choice=='4'):
+            Collectibles()
+        elif(choice=='e'):
+            inv_loop=False
+        else:
+            print('Unknown character')
+            hold = msvcrt.getwch()
+        clearConsole()
+
 
 def Display_Inventory(group,size):
     print('|', end='')
@@ -791,8 +857,139 @@ def Display_Inventory(group,size):
         if(item_list[i]['taken']==True):
             print(item_list[i]['name'],'|', end='')
         else:
-            print('Empty |', end='')
+            print('Empty |', end='') 
     print('')
+
+def Display_Category(group,size):
+    for i in range(group,group+size):
+        if(item_list[i]['taken']==True):
+            print(str(i+1-group)+'. '+item_list[i]['name'])
+        #else:
+         #   print(str(i+1-group)+'. '+'Empty')
+    print('E. Exit')
+
+def Crafting():
+    clearConsole()
+    inv_loop=True
+    while(inv_loop):
+        print('Crafting/Trading')
+        Display_Category(0,8)
+        choice = msvcrt.getwch()
+        if(choice.isdigit()):
+            if((int(choice)>0)and(int(choice)<9)):
+                    Item_Detailed_Crafting(int(choice)-1)
+            else:
+                print('Unknown character')
+        elif(choice=='e'):
+            inv_loop=False
+            return
+        else:
+            print('Unknown character')
+        hold = msvcrt.getwch()
+        clearConsole()
+
+def Passwords():
+    clearConsole()
+    inv_loop=True
+    while(inv_loop):
+        print('Passwords')
+        Display_Category(10,6)
+        choice = msvcrt.getwch()
+        if(choice.isdigit()):
+            if((int(choice)>0)and(int(choice)<7)):
+                Item_Detailed_Passwords(int(choice)-1)
+            else:
+                print('Unknown character')
+        elif(choice=='e'):
+            inv_loop=False
+            return
+        else:
+            print('Unknown character')
+        hold = msvcrt.getwch()
+        clearConsole()
+
+def Information():
+    clearConsole()
+    inv_loop=True
+    while(inv_loop):
+        print('Information')
+        Display_Category(20,8)
+        choice = msvcrt.getwch()
+        if(choice.isdigit()):
+            if((int(choice)>0)and(int(choice)<9)):
+               Item_Detailed_Information(int(choice)-1)
+            else:
+                print('Unknown character')
+        elif(choice=='e'):
+            inv_loop=False
+            return
+        else:
+            print('Unknown character')
+        hold = msvcrt.getwch()
+        clearConsole()
+
+def Collectibles():
+    clearConsole()
+    inv_loop=True
+    while(inv_loop):
+        print('Collectibles')
+        Display_Category(30,5)
+        choice = msvcrt.getwch()
+        if(choice.isdigit()):
+           if((int(choice)>0)and(int(choice)<6)):
+               Item_Detailed_Collectibles(int(choice)-1)
+           else:
+                print('Unknown character')
+        elif(choice=='e'):
+            inv_loop=False
+            return
+        else:
+            print('Unknown character')
+        hold = msvcrt.getwch()
+        clearConsole()
+
+def Item_Detailed_Crafting(i):
+    clearConsole()
+    if(item_list[i]['taken']==True):
+        print(item_list[i]['name'])
+        print(ct_item_text[i]['quote'])
+        print(ct_item_text[i]['desc'])
+        print('')
+    else:
+        print('This slot is empty.')
+        print('')
+
+def Item_Detailed_Passwords(i):
+    clearConsole()
+    if(item_list[i+10]['taken']==True):
+        print(item_list[i+10]['name'])
+        print(p_item_text[i]['title'])
+        print(p_item_text[i]['message'])
+        print('')
+    else:
+        print('This slot is empty.')
+        print('')
+
+def Item_Detailed_Information(i):
+    clearConsole()
+    if(item_list[i+20]['taken']==True):
+        print(item_list[i+20]['name'])
+        print(i_item_text[i]['title'])
+        print(i_item_text[i]['text_body'])
+        print('')
+    else:
+        print('This slot is empty.')
+        print('')
+
+def Item_Detailed_Collectibles(i):
+    clearConsole()
+    if(item_list[i+30]['taken']==True):
+        print(item_list[i+30]['name'])
+        print(cl_item_text[i])
+        print('') 
+    else:
+        print('This slot is empty.')
+        print('')
 
 def Credits():
     clearConsole()
@@ -823,6 +1020,16 @@ def Controls():
     print('\nPress any key to continue...')
     hold = msvcrt.getwch() #Only for windows
 
+def Exit_Menu():
+    global stay, continueGame
+    clearConsole()
+    print('Are you sure you want to exit? y/n')
+    ans = msvcrt.getwch() #Only for windows
+    if(ans=='y'):
+        stay = False
+        continueGame = False
+    elif(ans=='n'):
+        clearConsole()
 
 #Main Function/Testing functions
 print('Game Start')
